@@ -117,7 +117,7 @@
   }
   .splash-start{
     font-family:'Zen Kaku Gothic New', sans-serif;
-    font-size:20px; font-weight:700; letter-spacing:.16em; color:#f2f2f0;
+    font-size:10px; font-weight:700; letter-spacing:.16em; color:#f2f2f0;
     animation:splashBlink 1.1s steps(1) infinite;
   }
   @keyframes splashBlink{ 50%{ opacity:.25; } }
@@ -292,6 +292,26 @@
     padding:4px 8px; border-radius:4px; cursor:pointer;
   }
   .sound-toggle:active{ opacity:.6; }
+
+  /* ===== スマホ：画面いっぱい（edge-to-edge）。PC/タブレットは上の枠デザインを維持 ===== */
+  @media (max-width: 640px){
+    body{ padding:0; }
+    .stage{ width:100vw; }
+    .device{
+      width:100vw; max-width:none;
+      height:100svh; max-height:none;
+      border:0;                 /* 白枠を消して端まで使う */
+    }
+    /* ヒント行は浮かせて、サウンドボタンだけ右上に常駐 */
+    .hint{
+      position:fixed; top:8px; right:8px;
+      margin:0; z-index:20; gap:0;
+    }
+    .hint span{ display:none; }              /* 「タップして進める」は非表示 */
+    .sound-toggle{
+      background:rgba(0,0,0,.5); border-color:#555; color:#e8e8e8;
+    }
+  }
 </style>
 </head>
 <body>
@@ -576,7 +596,8 @@
     menuArea: document.getElementById("menuArea"),
     menuTitle: document.getElementById("menuTitle"),
     frame: document.getElementById("frame"),
-    msg: document.getElementById("msgArea")
+    msg: document.getElementById("msgArea"),
+    device: document.querySelector(".device")
   };
 
   let typing = null;
@@ -790,8 +811,8 @@
         if(fn) fn();
       }
     };
-    els.frame.onclick = advance;
-    target.onclick = advance;
+    // メッセージ送りは本体(device)のどこをタップしても反応（絵・下枠・余白すべて）
+    els.device.onclick = advance;
   }
 
   /* 空行(\n\n)で区切って、段落ごとにタップ待ちしながら順番に表示する */

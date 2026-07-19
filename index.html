@@ -1052,7 +1052,9 @@
     const t = document.getElementById("titleScreen");
     if(t) t.classList.add("hidden");
     els.frame.onclick = null;
-    startIntro();
+    els.device.onclick = null; // 開始タップがメッセージ送りに伝わらないよう一旦解除
+    // 開始タップの伝播が終わってから最初のセリフを開始（1文字目スキップ防止）
+    setTimeout(startIntro, 0);
   }
 
   function startIntro(){
